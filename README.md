@@ -1,3 +1,11 @@
-# Shuttle.Core.Guard
+# Shuttle.Core.Container
 
-A guard implementation that performs asserts/assumptions to prevent invalid code execution.
+The following implementations are available:
+
+- Autofac
+- Castle
+- Ninject
+- SimpleInjector
+- StructureMap
+- Unity
+
