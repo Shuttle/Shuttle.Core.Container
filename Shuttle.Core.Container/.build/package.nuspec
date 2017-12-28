@@ -1,17 +1,21 @@
 <?xml version="1.0"?>
 <package >
-	<metadata>
-		<id>Shuttle.Core.Container</id>
-		<version>{semver}</version>
-		<authors>Eben Roux</authors>
-		<owners>Eben Roux</owners>
-		<licenseUrl>https://github.com/shuttle/Shuttle.Core.Container/raw/master/LICENSE</licenseUrl>
-		<projectUrl>https://github.com/shuttle/Shuttle.Core.Container</projectUrl>
-		<iconUrl>https://raw.githubusercontent.com/Shuttle/Shuttle.Core.Container/master/.media/logo.png</iconUrl>
-		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<description>Dependency injection container adapter.</description>
-		<releaseNotes/>
-		<copyright>Copyright (c) {year}, Eben Roux</copyright>
-		<tags>shuttle</tags>
-	</metadata>
+  <metadata>
+    <id>Shuttle.Core.Container</id>
+    <version>{semver}</version>
+    <authors>Eben Roux</authors>
+    <owners>Eben Roux</owners>
+    <licenseUrl>https://github.com/shuttle/Shuttle.Core.Container/raw/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/shuttle/Shuttle.Core.Container</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/Shuttle/Shuttle.Core.Container/master/.media/logo.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Dependency injection container adapter.</description>
+    <releaseNotes/>
+    <copyright>Copyright (c) {year}, Eben Roux</copyright>
+    <tags>shuttle</tags>
+    <dependencies>
+      <dependency id="Shuttle.Core.Configuration" version="{Shuttle.Core.Configuration-version}" />
+      <dependency id="Shuttle.Core.Reflection" version="{Shuttle.Core.Reflection-version}" />
+    </dependencies>
+  </metadata>
 </package>
