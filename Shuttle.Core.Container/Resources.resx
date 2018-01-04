@@ -137,4 +137,8 @@
     <value>Could not get type '{0}'.  Ensure that you have a fully qualified type: 'FullName, Assembly'.</value>
     <comment>{0} = type that could not be found</comment>
   </data>
+  <data name="TypeNotRegisteredException" xml:space="preserve">
+    <value>No implementation type has been registered for dependency type '{0}'.</value>
+    <comment>{0} = dependency type full name</comment>
+  </data>
 </root>

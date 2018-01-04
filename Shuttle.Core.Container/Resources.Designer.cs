@@ -104,5 +104,14 @@ namespace Shuttle.Core.Container {
                 return ResourceManager.GetString("MissingTypeException", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No implementation type has been registered for dependency type &apos;{0}&apos;..
+        /// </summary>
+        public static string TypeNotRegisteredException {
+            get {
+                return ResourceManager.GetString("TypeNotRegisteredException", resourceCulture);
+            }
+        }
     }
 }
