@@ -117,7 +117,7 @@ namespace Shuttle.Core.Container
 
             foreach (var assembly in bootstrapConfiguration.Assemblies)
             {
-                foreach (var type in reflectionService.GetTypes<IComponentResolverBootstrap>(assembly))
+                foreach (var type in reflectionService.GetTypesAssignableTo<IComponentResolverBootstrap>(assembly))
                 {
                     type.AssertDefaultConstructor(string.Format(Resources.DefaultConstructorRequired,
                         "IComponentResolverBootstrap", type.FullName));

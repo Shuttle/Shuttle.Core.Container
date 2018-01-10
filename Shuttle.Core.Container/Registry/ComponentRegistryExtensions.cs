@@ -249,7 +249,7 @@ namespace Shuttle.Core.Container
 
             foreach (var assembly in bootstrapConfiguration.Assemblies)
             {
-                foreach (var type in reflectionService.GetTypes<IComponentRegistryBootstrap>(assembly))
+                foreach (var type in reflectionService.GetTypesAssignableTo<IComponentRegistryBootstrap>(assembly))
                 {
                     if (completed.Contains(type))
                     {
