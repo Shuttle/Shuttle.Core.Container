@@ -10,15 +10,15 @@ namespace Shuttle.Core.Container
 
         public bool IsRegistered(Type type)
         {
-            Guard.AgainstNull(type, "type");
+            Guard.AgainstNull(type, nameof(type));
 
             return _registeredTypes.Contains(type);
         }
 
         public virtual IComponentRegistry Register(Type dependencyType, Type implementationType, Lifestyle lifestyle)
         {
-            Guard.AgainstNull(dependencyType, "dependencyType");
-            Guard.AgainstNull(implementationType, "implementationType");
+            Guard.AgainstNull(dependencyType, nameof(dependencyType));
+            Guard.AgainstNull(implementationType, nameof(implementationType));
 
             DependencyInvariant(dependencyType);
 
@@ -30,8 +30,8 @@ namespace Shuttle.Core.Container
         public virtual IComponentRegistry RegisterCollection(Type dependencyType, IEnumerable<Type> implementationTypes,
             Lifestyle lifestyle)
         {
-            Guard.AgainstNull(dependencyType, "dependencyType");
-            Guard.AgainstNull(implementationTypes, "implementationTypes");
+            Guard.AgainstNull(dependencyType, nameof(dependencyType));
+            Guard.AgainstNull(implementationTypes, nameof(implementationTypes));
 
             DependencyInvariant(dependencyType);
 
@@ -40,10 +40,10 @@ namespace Shuttle.Core.Container
             return this;
         }
 
-        public virtual IComponentRegistry Register(Type dependencyType, object instance)
+        public virtual IComponentRegistry RegisterInstance(Type dependencyType, object instance)
         {
-            Guard.AgainstNull(dependencyType, "dependencyType");
-            Guard.AgainstNull(instance, "instance");
+            Guard.AgainstNull(dependencyType, nameof(dependencyType));
+            Guard.AgainstNull(instance, nameof(instance));
 
             DependencyInvariant(dependencyType);
 

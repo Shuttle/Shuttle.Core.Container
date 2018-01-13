@@ -17,7 +17,7 @@ namespace Shuttle.Core.Container
         /// <returns>An instance of the type implementing the requested service type.</returns>
         public static T Resolve<T>(this IComponentResolver resolver) where T : class
         {
-            Guard.AgainstNull(resolver, "resolver");
+            Guard.AgainstNull(resolver, nameof(resolver));
 
             return (T)resolver.Resolve(typeof(T));
         }
@@ -41,8 +41,8 @@ namespace Shuttle.Core.Container
         /// <returns>An instance of the type implementing the requested service type if it can be resolved; else null.</returns>
         public static object AttemptResolve(this IComponentResolver resolver, Type dependencyType)
         {
-            Guard.AgainstNull(resolver, "resolver");
-            Guard.AgainstNull(dependencyType, "dependencyType");
+            Guard.AgainstNull(resolver, nameof(resolver));
+            Guard.AgainstNull(dependencyType, nameof(dependencyType));
 
             try
             {
@@ -62,7 +62,7 @@ namespace Shuttle.Core.Container
         /// <param name="dependencyTypes">The list of service types that need to be resolved.</param>
         public static IEnumerable<object> Resolve(this IComponentResolver resolver, IEnumerable<Type> dependencyTypes)
         {
-            Guard.AgainstNull(resolver, "resolver");
+            Guard.AgainstNull(resolver, nameof(resolver));
 
             var result = new List<object>();
             var types = dependencyTypes as IList<Type> ?? dependencyTypes.ToList();
@@ -85,7 +85,7 @@ namespace Shuttle.Core.Container
         /// <returns>All instances of the types implementing the requested service type.</returns>
         public static IEnumerable<T> ResolveAll<T>(this IComponentResolver resolver) where T : class
         {
-            Guard.AgainstNull(resolver, "resolver");
+            Guard.AgainstNull(resolver, nameof(resolver));
 
             return resolver.ResolveAll(typeof(T)).Cast<T>().ToList();
         }
@@ -110,7 +110,7 @@ namespace Shuttle.Core.Container
         /// <param name="bootstrapConfiguration">The `IBootstrapConfiguration` instance that contains the bootstrapping configuration.</param>
         public static void ResolverBoostrap(IComponentResolver resolver, IComponentResolverConfiguration resolverConfiguration, IBootstrapConfiguration bootstrapConfiguration)
         {
-            Guard.AgainstNull(resolver, "resolver");
+            Guard.AgainstNull(resolver, nameof(resolver));
             Guard.AgainstNull(resolverConfiguration, nameof(resolverConfiguration));
 
             var reflectionService = new ReflectionService();

@@ -84,11 +84,11 @@ namespace Shuttle.Core.Container.Tests
 		{
 			var mock = new Mock<IComponentRegistry>();
 
-			mock.Object.Register<ISomeDependency>(new SomeDependency());
-			mock.Object.Register<ISomeDependency>(new SomeDependency());
+			mock.Object.RegisterInstance<ISomeDependency>(new SomeDependency());
+			mock.Object.RegisterInstance<ISomeDependency>(new SomeDependency());
 
 			mock.Verify(m => m.IsRegistered(It.IsAny<Type>()), Times.Never);
-			mock.Verify(m => m.Register(typeof(ISomeDependency), It.IsAny<SomeDependency>()), Times.Exactly(2));
+			mock.Verify(m => m.RegisterInstance(typeof(ISomeDependency), It.IsAny<SomeDependency>()), Times.Exactly(2));
 		}
 
 		[Test]
@@ -200,14 +200,14 @@ namespace Shuttle.Core.Container.Tests
 
 			mock.Setup(m => m.IsRegistered(typeof(ISomeDependency))).Returns(false);
 
-			mock.Object.AttemptRegister<ISomeDependency>(new SomeDependency());
+			mock.Object.AttemptRegisterInstance<ISomeDependency>(new SomeDependency());
 
 			mock.Setup(m => m.IsRegistered(typeof(ISomeDependency))).Returns(true);
 
-			mock.Object.AttemptRegister<ISomeDependency>(new SomeDependency());
+			mock.Object.AttemptRegisterInstance<ISomeDependency>(new SomeDependency());
 
 			mock.Verify(m => m.IsRegistered(It.IsAny<Type>()), Times.Exactly(2));
-			mock.Verify(m => m.Register(typeof(ISomeDependency), It.IsAny<SomeDependency>()), Times.Once);
+			mock.Verify(m => m.RegisterInstance(typeof(ISomeDependency), It.IsAny<SomeDependency>()), Times.Once);
 		}
 	}
 }

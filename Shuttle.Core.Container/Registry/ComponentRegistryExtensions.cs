@@ -15,7 +15,7 @@ namespace Shuttle.Core.Container
         /// <returns>Returns `true` if the dependency type is registered; else `false`.</returns>
         public static bool IsRegistered<TDependency>(this IComponentRegistry registry)
         {
-            Guard.AgainstNull(registry, "registry");
+            Guard.AgainstNull(registry, nameof(registry));
 
             return registry.IsRegistered(typeof(TDependency));
         }
@@ -30,7 +30,7 @@ namespace Shuttle.Core.Container
             where TDependency : class
             where TImplementation : class, TDependency
         {
-            Guard.AgainstNull(registry, "registry");
+            Guard.AgainstNull(registry, nameof(registry));
 
             registry.Register<TDependency, TImplementation>(Lifestyle.Singleton);
 
@@ -49,7 +49,7 @@ namespace Shuttle.Core.Container
             where TDependency : class
             where TImplementation : TDependency
         {
-            Guard.AgainstNull(registry, "registry");
+            Guard.AgainstNull(registry, nameof(registry));
 
             registry.Register(typeof(TDependency), typeof(TImplementation), lifestyle);
 
@@ -83,7 +83,7 @@ namespace Shuttle.Core.Container
             Lifestyle lifestyle)
             where TDependencyImplementation : class
         {
-            Guard.AgainstNull(registry, "registry");
+            Guard.AgainstNull(registry, nameof(registry));
 
             registry.Register(typeof(TDependencyImplementation), typeof(TDependencyImplementation), lifestyle);
 
@@ -96,11 +96,11 @@ namespace Shuttle.Core.Container
         /// <typeparam name="TDependency">The type of the dependency being registered.</typeparam>
         /// <param name="registry">The registry instance to register the mapping against.</param>
         /// <param name="instance">The singleton instance to be registered.</param>
-        public static IComponentRegistry Register<TDependency>(this IComponentRegistry registry, TDependency instance)
+        public static IComponentRegistry RegisterInstance<TDependency>(this IComponentRegistry registry, TDependency instance)
         {
-            Guard.AgainstNull(registry, "registry");
+            Guard.AgainstNull(registry, nameof(registry));
 
-            registry.Register(typeof(TDependency), instance);
+            registry.RegisterInstance(typeof(TDependency), instance);
 
             return registry;
         }
@@ -116,7 +116,7 @@ namespace Shuttle.Core.Container
             where TDependency : class
             where TImplementation : class, TDependency
         {
-            Guard.AgainstNull(registry, "registry");
+            Guard.AgainstNull(registry, nameof(registry));
 
             if (registry.IsRegistered<TDependency>())
             {
@@ -141,7 +141,7 @@ namespace Shuttle.Core.Container
             where TDependency : class
             where TImplementation : TDependency
         {
-            Guard.AgainstNull(registry, "registry");
+            Guard.AgainstNull(registry, nameof(registry));
 
             if (registry.IsRegistered<TDependency>())
             {
@@ -187,7 +187,7 @@ namespace Shuttle.Core.Container
             Lifestyle lifestyle)
             where TDependencyImplementation : class
         {
-            Guard.AgainstNull(registry, "registry");
+            Guard.AgainstNull(registry, nameof(registry));
 
             if (registry.IsRegistered<TDependencyImplementation>())
             {
@@ -206,17 +206,17 @@ namespace Shuttle.Core.Container
         /// <typeparam name="TDependency">The type of the dependency being registered.</typeparam>
         /// <param name="registry">The registry instance to register the mapping against.</param>
         /// <param name="instance">The singleton instance to be registered.</param>
-        public static IComponentRegistry AttemptRegister<TDependency>(this IComponentRegistry registry,
+        public static IComponentRegistry AttemptRegisterInstance<TDependency>(this IComponentRegistry registry,
             TDependency instance)
         {
-            Guard.AgainstNull(registry, "registry");
+            Guard.AgainstNull(registry, nameof(registry));
 
             if (registry.IsRegistered<TDependency>())
             {
                 return registry;
             }
 
-            registry.Register(typeof(TDependency), instance);
+            registry.RegisterInstance(typeof(TDependency), instance);
 
             return registry;
         }
@@ -241,7 +241,7 @@ namespace Shuttle.Core.Container
         public static void RegistryBoostrap(this IComponentRegistry registry,
             IComponentRegistryConfiguration registryConfiguration, IBootstrapConfiguration bootstrapConfiguration)
         {
-            Guard.AgainstNull(registry, "registry");
+            Guard.AgainstNull(registry, nameof(registry));
 
             var completed = new List<Type>();
 

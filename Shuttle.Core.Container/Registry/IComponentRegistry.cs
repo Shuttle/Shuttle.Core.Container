@@ -17,6 +17,6 @@ namespace Shuttle.Core.Container
         IComponentRegistry RegisterCollection(Type dependencyType, IEnumerable<Type> implementationTypes,
             Lifestyle lifestyle);
 
-        IComponentRegistry Register(Type dependencyType, object instance);
+        IComponentRegistry RegisterInstance(Type dependencyType, object instance);
     }
 }
