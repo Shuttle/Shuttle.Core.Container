@@ -27,6 +27,18 @@ namespace Shuttle.Core.Container
             return this;
         }
 
+        public IComponentRegistry RegisterOpen(Type dependencyType, Type implementationType, Lifestyle lifestyle)
+        {
+            Guard.AgainstNull(dependencyType, nameof(dependencyType));
+            Guard.AgainstNull(implementationType, nameof(implementationType));
+
+            DependencyInvariant(dependencyType);
+
+            _registeredTypes.Add(dependencyType);
+
+            return this;
+        }
+
         public virtual IComponentRegistry RegisterCollection(Type dependencyType, IEnumerable<Type> implementationTypes,
             Lifestyle lifestyle)
         {

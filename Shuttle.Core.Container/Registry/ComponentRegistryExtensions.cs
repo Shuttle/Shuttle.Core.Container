@@ -106,6 +106,23 @@ namespace Shuttle.Core.Container
         }
 
         /// <summary>
+        ///     Registers a new dependency/implementation type pair as a singleton.
+        /// </summary>
+        /// <param name="registry">The registry instance to register the mapping against.</param>
+        /// <param name="dependencyType">The type of the dependency being registered.</param>
+        /// <param name="implementationType">The type of the implementation that should be resolved.</param>
+        /// <returns></returns>
+        public static IComponentRegistry Register(this IComponentRegistry registry, Type dependencyType,
+            Type implementationType)
+        {
+            Guard.AgainstNull(registry, nameof(registry));
+
+            registry.Register(dependencyType, implementationType, Lifestyle.Singleton);
+
+            return registry;
+        }
+
+        /// <summary>
         ///     Registers a new dependency/implementation type pair as a singleton if the dependency has not yet been registered;
         ///     else does nothing.
         /// </summary>
