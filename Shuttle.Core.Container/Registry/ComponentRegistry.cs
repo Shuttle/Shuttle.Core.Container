@@ -15,62 +15,44 @@ namespace Shuttle.Core.Container
             return _registeredTypes.Contains(type);
         }
 
-        public virtual IComponentRegistry Register(Type dependencyType, Type implementationType, Lifestyle lifestyle)
+        private IComponentRegistry Register(Type dependencyType)
         {
             Guard.AgainstNull(dependencyType, nameof(dependencyType));
-            Guard.AgainstNull(implementationType, nameof(implementationType));
 
-            DependencyInvariant(dependencyType);
+            if (IsRegistered(dependencyType))
+            {
+                throw new TypeRegistrationException(
+                    string.Format(Resources.DuplicateTypeRegistrationException, dependencyType.FullName));
+            }
 
             _registeredTypes.Add(dependencyType);
 
             return this;
         }
 
-        public IComponentRegistry RegisterOpen(Type dependencyType, Type implementationType, Lifestyle lifestyle)
+        public virtual IComponentRegistry Register(Type dependencyType, Type implementationType, Lifestyle lifestyle)
         {
-            Guard.AgainstNull(dependencyType, nameof(dependencyType));
-            Guard.AgainstNull(implementationType, nameof(implementationType));
+            return Register(dependencyType);
+        }
 
-            DependencyInvariant(dependencyType);
-
-            _registeredTypes.Add(dependencyType);
-
-            return this;
+        public virtual IComponentRegistry RegisterGeneric(Type dependencyType, Type implementationType, Lifestyle lifestyle)
+        {
+            return Register(dependencyType);
         }
 
         public virtual IComponentRegistry RegisterCollection(Type dependencyType, IEnumerable<Type> implementationTypes,
             Lifestyle lifestyle)
         {
-            Guard.AgainstNull(dependencyType, nameof(dependencyType));
             Guard.AgainstNull(implementationTypes, nameof(implementationTypes));
 
-            DependencyInvariant(dependencyType);
-
-            _registeredTypes.Add(dependencyType);
-
-            return this;
+            return Register(dependencyType);
         }
 
         public virtual IComponentRegistry RegisterInstance(Type dependencyType, object instance)
         {
-            Guard.AgainstNull(dependencyType, nameof(dependencyType));
             Guard.AgainstNull(instance, nameof(instance));
 
-            DependencyInvariant(dependencyType);
-
-            _registeredTypes.Add(dependencyType);
-
-            return this;
-        }
-
-        private void DependencyInvariant(Type type)
-        {
-            if (IsRegistered(type))
-            {
-                throw new TypeRegistrationException(
-                    string.Format(Resources.DuplicateTypeRegistrationException, type.FullName));
-            }
+            return Register(dependencyType);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Shuttle.Core.Container
     {
         bool IsRegistered(Type type);
         IComponentRegistry Register(Type dependencyType, Type implementationType, Lifestyle lifestyle);
-        IComponentRegistry RegisterOpen(Type dependencyType, Type implementationType, Lifestyle lifestyle);
+        IComponentRegistry RegisterGeneric(Type dependencyType, Type implementationType, Lifestyle lifestyle);
         IComponentRegistry RegisterCollection(Type dependencyType, IEnumerable<Type> implementationTypes, Lifestyle lifestyle);
         IComponentRegistry RegisterInstance(Type dependencyType, object instance);
     }
