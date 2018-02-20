@@ -110,7 +110,8 @@ namespace Shuttle.Core.Container
         /// <typeparam name="TDependency">The type of the dependency being registered.</typeparam>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="instance">The singleton instance to be registered.</param>
-        public static IComponentRegistry RegisterInstance<TDependency>(this IComponentRegistry registry, TDependency instance)
+        public static IComponentRegistry RegisterInstance<TDependency>(this IComponentRegistry registry,
+            TDependency instance)
         {
             Guard.AgainstNull(registry, nameof(registry));
 
@@ -253,6 +254,44 @@ namespace Shuttle.Core.Container
         }
 
         /// <summary>
+        ///     Registers an open generic for the given dependency type as a singleton if the dependency has not yet been registered; else
+        ///     does nothing.
+        /// </summary>
+        /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
+        /// <param name="dependencyType">The open generic type of the dependency being registered.</param>
+        /// <param name="implementationType">The open generic type of the implementation that should be resolved.</param>
+        public static IComponentRegistry AttemptRegisterGeneric(this IComponentRegistry registry, Type dependencyType,
+            Type implementationType)
+        {
+            return AttemptRegisterGeneric(registry, dependencyType, implementationType, Lifestyle.Singleton);
+
+            return registry;
+        }
+
+        /// <summary>
+        ///     Registers an open generic for the given dependency type if the dependency has not yet been registered; else
+        ///     does nothing.
+        /// </summary>
+        /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
+        /// <param name="dependencyType">The open generic type of the dependency being registered.</param>
+        /// <param name="implementationType">The open generic type of the implementation that should be resolved.</param>
+        /// <param name="lifestyle">The lifestyle of the component.</param>
+        public static IComponentRegistry AttemptRegisterGeneric(this IComponentRegistry registry, Type dependencyType,
+            Type implementationType, Lifestyle lifestyle)
+        {
+            Guard.AgainstNull(registry, nameof(registry));
+
+            if (registry.IsRegistered(dependencyType))
+            {
+                return registry;
+            }
+
+            registry.RegisterGeneric(dependencyType, implementationType, lifestyle);
+
+            return registry;
+        }
+
+        /// <summary>
         ///     Creates an instance of all types implementing the `IComponentRegistryBootstrap` interface and calls the `Register`
         ///     method.
         /// </summary>
@@ -267,8 +306,14 @@ namespace Shuttle.Core.Container
         ///     method.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
-        /// <param name="registryConfiguration">The `IComponentRegistryConfiguration` instance that contains the registry configuration.</param>
-        /// <param name="bootstrapConfiguration">The `IBootstrapConfiguration` instance that contains the bootstrapping configuration.</param>
+        /// <param name="registryConfiguration">
+        ///     The `IComponentRegistryConfiguration` instance that contains the registry
+        ///     configuration.
+        /// </param>
+        /// <param name="bootstrapConfiguration">
+        ///     The `IBootstrapConfiguration` instance that contains the bootstrapping
+        ///     configuration.
+        /// </param>
         public static void RegistryBoostrap(this IComponentRegistry registry,
             IComponentRegistryConfiguration registryConfiguration, IBootstrapConfiguration bootstrapConfiguration)
         {
@@ -309,7 +354,8 @@ namespace Shuttle.Core.Container
         }
 
         /// <summary>
-        /// Register all types in the given assembly that end in the `DefaultSuffixes` against a dependency type matching the type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
+        ///     Register all types in the given assembly that end in the `DefaultSuffixes` against a dependency type matching the
+        ///     type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="assemblyName">The assembly name that contains the types to evaluate.</param>
@@ -319,7 +365,8 @@ namespace Shuttle.Core.Container
         }
 
         /// <summary>
-        /// Register all types in the given assembly that end in the given `suffixes` against a dependency type matching the type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
+        ///     Register all types in the given assembly that end in the given `suffixes` against a dependency type matching the
+        ///     type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="assemblyName">The assembly name that contains the types to evaluate.</param>
@@ -333,7 +380,8 @@ namespace Shuttle.Core.Container
         }
 
         /// <summary>
-        /// Register all types in the given assembly that end in the `DefaultSuffixes` against a dependency type matching the type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
+        ///     Register all types in the given assembly that end in the `DefaultSuffixes` against a dependency type matching the
+        ///     type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="assembly">The assembly that contains the types to evaluate.</param>
@@ -343,12 +391,14 @@ namespace Shuttle.Core.Container
         }
 
         /// <summary>
-        /// Register all types in the given assembly that end in the given `suffixes` against a dependency type matching the type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
+        ///     Register all types in the given assembly that end in the given `suffixes` against a dependency type matching the
+        ///     type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="assembly">The assembly that contains the types to evaluate.</param>
         /// <param name="suffixes">A list of suffixes that a type should end in to be registered.</param>
-        public static void RegisterSuffixed(this IComponentRegistry registry, Assembly assembly, IEnumerable<string> suffixes)
+        public static void RegisterSuffixed(this IComponentRegistry registry, Assembly assembly,
+            IEnumerable<string> suffixes)
         {
             Guard.AgainstNull(registry, nameof(registry));
             Guard.AgainstNull(assembly, nameof(assembly));
@@ -375,14 +425,19 @@ namespace Shuttle.Core.Container
         }
 
         /// <summary>
-        /// Registeres all the types in the given assembly that satisfies the `shouldRegister` function against the type return from the `getDependencyType` function.
+        ///     Registeres all the types in the given assembly that satisfies the `shouldRegister` function against the type return
+        ///     from the `getDependencyType` function.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="assembly">The assembly that contains the types to evaluate.</param>
         /// <param name="shouldRegister">A function that returns `true` to register the type; else `false` to ignore the type.</param>
-        /// <param name="getDependencyType">A function that returns the dependency `Type` that the implementation type should be registered against; else `null` to ignore the register for no qualifying dependency type.</param>
+        /// <param name="getDependencyType">
+        ///     A function that returns the dependency `Type` that the implementation type should be
+        ///     registered against; else `null` to ignore the register for no qualifying dependency type.
+        /// </param>
         /// <param name="getLifestyle">A function that returns the `Lifestyle` with which to register the component.</param>
-        public static void Register(this IComponentRegistry registry, Assembly assembly, Func<Type, bool> shouldRegister, Func<Type, Type> getDependencyType, Func<Type, Lifestyle> getLifestyle)
+        public static void Register(this IComponentRegistry registry, Assembly assembly,
+            Func<Type, bool> shouldRegister, Func<Type, Type> getDependencyType, Func<Type, Lifestyle> getLifestyle)
         {
             Guard.AgainstNull(registry, nameof(registry));
             Guard.AgainstNull(assembly, nameof(assembly));
