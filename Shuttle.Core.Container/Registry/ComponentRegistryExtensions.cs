@@ -264,8 +264,6 @@ namespace Shuttle.Core.Container
             Type implementationType)
         {
             return AttemptRegisterGeneric(registry, dependencyType, implementationType, Lifestyle.Singleton);
-
-            return registry;
         }
 
         /// <summary>
