@@ -317,7 +317,7 @@ namespace Shuttle.Core.Container
         {
             Guard.AgainstNull(registry, nameof(registry));
 
-            var completed = new List<Type>();
+            var completed = new HashSet<Type>();
 
             var reflectionService = new ReflectionService();
 

@@ -50,13 +50,14 @@ namespace Shuttle.Core.Container
             foreach (ComponentRegistryCollectionElement collection in section.Collections)
             {
                 var dependencyType = Type.GetType(collection.DependencyType);
-                var implementationTypes = new List<Type>();
 
                 if (dependencyType == null)
                 {
                     throw new ConfigurationErrorsException(string.Format(Resources.MissingTypeException,
                         collection.DependencyType));
                 }
+
+                var implementationTypes = new List<Type>(collection.Count);
 
                 foreach (ComponentRegistryCollectionImplementationTypeElement element in collection)
                 {

@@ -3,39 +3,39 @@ using NUnit.Framework;
 
 namespace Shuttle.Core.Container.Tests
 {
-	public class BootstrapFixture : IComponentRegistryBootstrap, IComponentResolverBootstrap
-	{
-		private static bool _bootstrapRegisterCalled;
-		private static bool _bootstrapResolveCalled;
+    public class BootstrapFixture : IComponentRegistryBootstrap, IComponentResolverBootstrap
+    {
+        private static bool _bootstrapRegisterCalled;
+        private static bool _bootstrapResolveCalled;
 
-		[Test]
-		public void Should_be_able_to_bootstrap()
-		{
-			var registry = new Mock<IComponentRegistry>();
-			var resolver = new Mock<IComponentResolver>();
+        [Test]
+        public void Should_be_able_to_bootstrap()
+        {
+            var registry = new Mock<IComponentRegistry>();
+            var resolver = new Mock<IComponentResolver>();
 
-			registry.Object.RegistryBoostrap();
-			resolver.Object.ResolverBoostrap();
+            registry.Object.RegistryBoostrap();
+            resolver.Object.ResolverBoostrap();
 
-			Assert.IsTrue(_bootstrapRegisterCalled);
-			Assert.IsTrue(_bootstrapResolveCalled);
+            Assert.IsTrue(_bootstrapRegisterCalled);
+            Assert.IsTrue(_bootstrapResolveCalled);
 
-			registry.Verify(m => m.Register(typeof(ISomeDependency), typeof(SomeDependency), Lifestyle.Singleton));
-			resolver.Verify(m => m.ResolveAll(typeof(ISomeDependency)));
-		}
+            registry.Verify(m => m.Register(typeof(ISomeDependency), typeof(SomeDependency), Lifestyle.Singleton));
+            resolver.Verify(m => m.ResolveAll(typeof(ISomeDependency)));
+        }
 
-		public void Register(IComponentRegistry registry)
-		{
-			_bootstrapRegisterCalled = true;
+        public void Register(IComponentRegistry registry)
+        {
+            _bootstrapRegisterCalled = true;
 
-		    registry.Register(typeof(ISomeDependency), typeof(SomeDependency), Lifestyle.Singleton);
-		}
+            registry.Register(typeof(ISomeDependency), typeof(SomeDependency), Lifestyle.Singleton);
+        }
 
-		public void Resolve(IComponentResolver resolver)
-		{
-			_bootstrapResolveCalled = true;
+        public void Resolve(IComponentResolver resolver)
+        {
+            _bootstrapResolveCalled = true;
 
-		    resolver.ResolveAll(typeof(ISomeDependency));
-		}
-	}
+            resolver.ResolveAll(typeof(ISomeDependency));
+        }
+    }
 }
