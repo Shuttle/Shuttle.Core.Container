@@ -445,7 +445,7 @@ namespace Shuttle.Core.Container
 
             foreach (var type in assembly.GetTypes())
             {
-                if (type.IsInterface || !shouldRegister.Invoke(type))
+                if (type.IsInterface || type.IsAbstract || !shouldRegister.Invoke(type))
                 {
                     continue;
                 }
