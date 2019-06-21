@@ -14,8 +14,8 @@ namespace Shuttle.Core.Container.Tests
             var registry = new Mock<IComponentRegistry>();
             var resolver = new Mock<IComponentResolver>();
 
-            registry.Object.RegistryBoostrap();
-            resolver.Object.ResolverBoostrap();
+            registry.Object.RegistryBootstrap();
+            resolver.Object.ResolverBootstrap();
 
             Assert.IsTrue(_bootstrapRegisterCalled);
             Assert.IsTrue(_bootstrapResolveCalled);

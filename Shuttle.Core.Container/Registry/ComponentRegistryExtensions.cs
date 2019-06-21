@@ -294,9 +294,9 @@ namespace Shuttle.Core.Container
         ///     method.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
-        public static void RegistryBoostrap(this IComponentRegistry registry)
+        public static void RegistryBootstrap(this IComponentRegistry registry)
         {
-            RegistryBoostrap(registry, ComponentRegistrySection.Configuration(), BootstrapSection.Configuration());
+            RegistryBootstrap(registry, ComponentRegistrySection.Configuration(), BootstrapSection.Configuration());
         }
 
         /// <summary>
@@ -312,7 +312,7 @@ namespace Shuttle.Core.Container
         ///     The `IBootstrapConfiguration` instance that contains the bootstrapping
         ///     configuration.
         /// </param>
-        public static void RegistryBoostrap(this IComponentRegistry registry,
+        public static void RegistryBootstrap(this IComponentRegistry registry,
             IComponentRegistryConfiguration registryConfiguration, IBootstrapConfiguration bootstrapConfiguration)
         {
             Guard.AgainstNull(registry, nameof(registry));
@@ -349,6 +349,8 @@ namespace Shuttle.Core.Container
                 registry.RegisterCollection(collection.DependencyType, collection.ImplementationTypes,
                     collection.Lifestyle);
             }
+
+            registry.AttemptRegisterInstance<IComponentResolver>(new ComponentResolver());
         }
 
         /// <summary>
@@ -423,7 +425,7 @@ namespace Shuttle.Core.Container
         }
 
         /// <summary>
-        ///     Registeres all the types in the given assembly that satisfies the `shouldRegister` function against the type return
+        ///     Registers all the types in the given assembly that satisfies the `shouldRegister` function against the type return
         ///     from the `getDependencyType` function.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>

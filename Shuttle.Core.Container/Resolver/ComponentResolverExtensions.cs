@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using Shuttle.Core.Contract;
 using Shuttle.Core.Reflection;
@@ -96,9 +95,9 @@ namespace Shuttle.Core.Container
         ///     method.
         /// </summary>
         /// <param name="resolver">The `IComponentResolver` instance to resolve dependencies from.</param>
-        public static void ResolverBoostrap(this IComponentResolver resolver)
+        public static void ResolverBootstrap(this IComponentResolver resolver)
         {
-            ResolverBoostrap(resolver, ComponentResolverSection.Configuration(), BootstrapSection.Configuration());
+            ResolverBootstrap(resolver, ComponentResolverSection.Configuration(), BootstrapSection.Configuration());
         }
 
         /// <summary>
@@ -108,7 +107,7 @@ namespace Shuttle.Core.Container
         /// <param name="resolver">The `IComponentResolver` instance to resolve dependencies from.</param>
         /// <param name="resolverConfiguration">The `IComponentResolverConfiguration` instance that contains the registry configuration.</param>
         /// <param name="bootstrapConfiguration">The `IBootstrapConfiguration` instance that contains the bootstrapping configuration.</param>
-        public static void ResolverBoostrap(IComponentResolver resolver, IComponentResolverConfiguration resolverConfiguration, IBootstrapConfiguration bootstrapConfiguration)
+        public static void ResolverBootstrap(IComponentResolver resolver, IComponentResolverConfiguration resolverConfiguration, IBootstrapConfiguration bootstrapConfiguration)
         {
             Guard.AgainstNull(resolver, nameof(resolver));
             Guard.AgainstNull(resolverConfiguration, nameof(resolverConfiguration));
@@ -130,6 +129,8 @@ namespace Shuttle.Core.Container
             {
                 resolver.Resolve(component.DependencyType);
             }
+
+            ((ComponentResolver)resolver.Resolve<IComponentResolver>()).Assign(resolver);
         }
     }
 }
