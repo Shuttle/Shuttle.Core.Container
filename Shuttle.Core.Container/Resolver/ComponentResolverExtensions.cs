@@ -77,7 +77,7 @@ namespace Shuttle.Core.Container
         }
 
         /// <summary>
-        ///     Resolves all registered instance of the requested service type.
+        ///     Resolves all registered instances of the requested service type.
         /// </summary>
         /// <typeparam name="T">The type of the services that should be resolved.</typeparam>
         /// <param name="resolver">The resolver instance that contains the registered service.</param>

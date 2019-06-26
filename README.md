@@ -17,8 +17,7 @@ Typically there would be no need to directly reference this package unless you a
 ```
 public enum Lifestyle
 {
-	Singleton = 0,
-	Transient = 1
+    Singleton = 0,Transient = 1
 }
 ```
 
@@ -47,6 +46,142 @@ IComponentRegistry RegisterCollection(Type dependencyType, IEnumerable<Type> imp
 
 Registers a collection of implementation types against the relevant dependency type using the given lifestyle.  Collections are a somewhat unique case and need to be registered as such.
 
+#### Extensions
+
+There are a number of extension methods that facilitate the registration of components:
+
+```c#
+public static bool IsRegistered<TDependency>(this IComponentRegistry registry)
+```
+
+Will return `true` if the dependency is registered; else `false`.
+
+```c#
+public static IComponentRegistry Register<TDependency, TImplementation>(this IComponentRegistry registry)
+```
+
+Registers a new dependency/implementation type pair as a singleton.
+
+```c#
+public static IComponentRegistry Register<TDependency, TImplementation>(this IComponentRegistry registry, Lifestyle lifestyle)
+```
+
+Registers a new dependency/implementation type pair with the given `Lifestyle`.
+
+```c#
+public static IComponentRegistry Register<TDependencyImplementation>(this IComponentRegistry registry)
+```
+
+Registers a new dependency/implementation type pair by binding the implementation type to itself.
+
+```c#
+public static IComponentRegistry RegisterInstance<TDependency>(this IComponentRegistry registry, TDependency instance)
+```
+
+Registers a singleton instance for the given dependency type.
+
+```c#
+public static IComponentRegistry Register(this IComponentRegistry registry, Type dependencyType, Type implementationType)
+```
+
+Registers a new dependency/implementation type pair as a singleton.
+
+```c#
+public static IComponentRegistry AttemptRegister<TDependency, TImplementation>(this IComponentRegistry registry)
+```
+
+Registers a new dependency/implementation type pair as a singleton if the dependency has not yet been registered; else does nothing.
+
+```c#
+public static IComponentRegistry AttemptRegister<TDependency, TImplementation>(this IComponentRegistry registry)
+```
+
+Registers a new dependency/implementation type pair as a singleton if the dependency has not yet been registered; else does nothing.
+
+```c#
+public static IComponentRegistry AttemptRegister<TDependency, TImplementation>(this IComponentRegistry registry, Lifestyle lifestyle)
+```
+
+Registers a new dependency/implementation type pair if the dependency has not yet been registered; else does nothing.
+
+```c#
+public static IComponentRegistry AttemptRegister<TDependencyImplementation>(this IComponentRegistry registry)
+```
+
+Registers a new dependency/implementation type pair as a singleton if the dependency has not yet been registered; else does nothing.
+
+```c#
+public static IComponentRegistry AttemptRegister<TDependencyImplementation>(this IComponentRegistry registry, Lifestyle lifestyle)
+```
+
+Registers a new dependency/implementation type pair if the dependency has not yet been registered; else does nothing.
+
+```c#
+public static IComponentRegistry AttemptRegister<TDependencyImplementation>(this IComponentRegistry registry, Lifestyle lifestyle)
+```
+
+Registers a new dependency/implementation type pair if the dependency has not yet been registered; else does nothing.
+
+```c#
+public static IComponentRegistry AttemptRegister<TDependencyImplementation>(this IComponentRegistry registry, Lifestyle lifestyle)
+```
+
+Registers a new dependency/implementation type pair if the dependency has not yet been registered; else does nothing.
+
+```c#
+public static IComponentRegistry AttemptRegister<TDependencyImplementation>(this IComponentRegistry registry, Lifestyle lifestyle)
+```
+
+Registers a new dependency/implementation type pair with then given `Lifestyle` if the dependency has not yet been registered; else does nothing.
+
+```c#
+public static IComponentRegistry AttemptRegisterInstance<TDependency>(this IComponentRegistry registry, TDependency instance)
+```
+
+Registers a singleton instance for the given dependency type if the dependency has not yet been registered; else does nothing.
+
+```c#
+public static IComponentRegistry AttemptRegisterGeneric(this IComponentRegistry registry, Type dependencyType, Type implementationType)
+```
+
+Registers an open generic for the given dependency type as a singleton if the dependency has not yet been registered; else does nothing.
+
+```c#
+public static IComponentRegistry AttemptRegisterGeneric(this IComponentRegistry registry, Type dependencyType, Type implementationType, Lifestyle lifestyle)
+```
+
+Registers an open generic for the given dependency type if the dependency has not yet been registered; else does nothing.
+
+```c#
+public static void RegisterSuffixed(this IComponentRegistry registry, string assemblyName)
+```
+
+ Register all types in the given assembly that end in the `DefaultSuffixes` against a dependency type matching the type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
+
+```c#
+public static void RegisterSuffixed(this IComponentRegistry registry, string assemblyName, IEnumerable<string> suffixes)
+```
+
+Register all types in the given assembly that end in the given `suffixes` against a dependency type matching the type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
+
+```c#
+public static void RegisterSuffixed(this IComponentRegistry registry, Assembly assembly)
+```
+
+Register all types in the given assembly that end in the `DefaultSuffixes` against a dependency type matching the type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
+
+```c#
+public static void RegisterSuffixed(this IComponentRegistry registry, Assembly assembly, IEnumerable<string> suffixes)
+```
+
+Register all types in the given assembly that end in the given `suffixes` against a dependency type matching the type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
+
+```c#
+public static void Register(this IComponentRegistry registry, Assembly assembly, Func<Type, bool> shouldRegister, Func<Type, Type> getDependencyType, Func<Type, Lifestyle> getLifestyle)
+```
+
+Registers all the types in the given assembly that satisfies the `shouldRegister` function against the type returned from the `getDependencyType` function.
+
 ## IComponentResolver
 
 ### Resolve
@@ -63,6 +198,35 @@ IEnumerable<object> ResolveAll(Type dependencyType);
 
 All instances of the requested dependency type will be resolved.  
 
+#### Extensions
+
+There are a couple of extension methods available to facilitate the resolving of dependencies:
+
+```c#
+public static T Resolve<T>(this IComponentResolver resolver)
+```
+
+Resolves the requested service type.  If the service type cannot be resolved an exception is thrown.
+
+```c#
+public static T AttemptResolve<T>(this IComponentResolver resolver)
+public static object AttemptResolve(this IComponentResolver resolver, Type dependencyType)
+```
+
+Attempts to resolve the requested service type.  If the service type cannot be resolved null is returned.
+
+```c#
+public static IEnumerable<object> Resolve(this IComponentResolver resolver, IEnumerable<Type> dependencyTypes)
+```
+
+Resolves all the given types.  These may be types that will not necessarily be injected into another class but that may require other instances from the resolver.
+
+```c#
+public static IEnumerable<T> ResolveAll<T>(this IComponentResolver resolver)
+```
+
+Resolves all registered instances of the requested service type.
+
 <a name="Bootstrapping"></a>
 
 ## Bootstrapping
@@ -74,7 +238,7 @@ You can control the bootstrapping behaviour using and implementation of the `IBo
 ``` xml
 <configuration>
   <configSections>
-    <section name="bootstrap" type="Shuttle.Core.Infrastructure.BootstrapSection, Shuttle.Core.Infrastructure"/>
+    <section name="bootstrap" type="Shuttle.Core.Container.BootstrapSection, Shuttle.Core.Container"/>
   </configSections>
 
   <bootstrap scan="All|Shuttle|None">
@@ -86,18 +250,50 @@ You can control the bootstrapping behaviour using and implementation of the `IBo
 </configuration>
 ```
 
+In addition a `ComponentResolver` implementation of the `IComponentResolver` interface is registered when using bootstrapping.  This is a proxy to the actual implementation of the `IComponentResolver` interface and forwards the relevant calls to the assigned instance.  
+
+***Note***:  Avoid using the service locator anti-pattern by injecting `IComponentResolver` in order to obtain singleton services.  Instead the intention is to use the `IComponentResolver` as a factory for transient instances where creating another interface may be superfluous.
+
 <a name="IComponentRegistryBootstrap"></a>
 
 ### IComponentRegistryBootstrap
 
-You can call the `IComponentRegistry.RegistryBoostrap()` extension method to bootstrap registrations.  This method will instance any classes that implement the `IComponentRegistryBootstrap` interface and call the `Register(IComponentRegistry registry)` method within that instance.  The implementation has to have a default constructor.
+You can call the `IComponentRegistry.RegistryBootstrap()` extension method to bootstrap registrations.  This method will instance any classes that implement the `IComponentRegistryBootstrap` interface and call the `Register(IComponentRegistry registry)` method within that instance.  The implementation has to have a default constructor.
+
+Example:
+
+```c#
+public class Bootstrap : IComponentRegistryBootstrap
+{
+    private static bool _registryBootstrapCalled;
+
+    public void Register(IComponentRegistry registry)
+    {
+        Guard.AgainstNull(registry, nameof(registry));
+
+        if (_registryBootstrapCalled)
+        {
+            return;
+        }
+
+        if (!registry.IsRegistered<IDependencyType>())
+        {
+            registry.AttemptRegisterInstance(ImplementationInstance));
+        }
+
+        registry.AttemptRegister<IAnotherDependency, ImplementationType>();
+
+        _registryBootstrapCalled = true;
+    }
+}
+```
 
 You may also make use of the registry's configuration section to specify explicit registrations and to disable scanning of assemblies (which defaults to `true`):
 
 ``` xml
 <configuration>
   <configSections>
-    <section name="componentRegistry" type="Shuttle.Core.Infrastructure.ComponentRegistrySection, Shuttle.Core.Infrastructure"/>
+    <section name="componentRegistry" type="Shuttle.Core.Container.ComponentRegistrySection, Shuttle.Core.Container"/>
   </configSections>
 
   <componentRegistry scan="true|false">
@@ -120,14 +316,39 @@ You may also make use of the registry's configuration section to specify explici
 
 ### IComponentResolverBootstrap
 
-You can call the `IComponentResolver.ResolverBoostrap()` extension method to bootstrap resolving components.  This method will instance any classes that implement the `IComponentResolverBootstrap` interface and call the `Resolve(IComponentResolver resolver)` method within that instance.  The implementation has to have a default constructor.
+You can call the `IComponentResolver.ResolverBootstrap()` extension method to bootstrap resolving components.  This method will instance any classes that implement the `IComponentResolverBootstrap` interface and call the `Resolve(IComponentResolver resolver)` method within that instance.  The implementation has to have a default constructor.
+
+Example:
+
+```c#
+public class Bootstrap : IComponentResolverBootstrap
+{
+    private static bool _resolverBootstrapCalled;
+
+    public void Resolve(IComponentResolver resolver)
+    {
+        Guard.AgainstNull(resolver, nameof(resolver));
+
+        if (_resolverBootstrapCalled)
+        {
+            return;
+        }
+
+        resolver.Resolve<IDependencyType>();
+
+        _resolverBootstrapCalled = true;
+    }
+}
+```
+
+You may be wondering why one would need to resolve instances.  If you happen to have an instance that has dependencies but is not a dependency itself then you would need to resolve it in order to inject the relevant implementations.  This is particularly useful in framework/plug-in architectures. 
 
 In addition you may also use the following configuration section to specify explicit resolutions and to disable scanning of assemblies (which defaults to `true`):
 
 ``` xml
 <configuration>
   <configSections>
-    <section name="componentResolver" type="Shuttle.Core.Infrastructure.ComponentResolverSection, Shuttle.Core.Infrastructure"/>
+    <section name="componentResolver" type="Shuttle.Core.Container.ComponentResolverSection, Shuttle.Core.Container"/>
   </configSections>
 
   <componentResolver scan="true|false">
@@ -152,4 +373,4 @@ The following implementations can be used *out-of-the-box*:
 - [SimpleInjector](https://github.com/Shuttle/Shuttle.Core.SimpleInjector)
 - [Unity](https://github.com/Shuttle/Shuttle.Core.Unity)
 
-If you don't see your container of choice here please [log an issue](https://github.com/Shuttle/Shuttle.Core.Infrastructure/issues/new) or share your own implementation.
+If you don't see your container of choice here please [log an issue](https://github.com/Shuttle/Shuttle.Core.Container/issues/new) or share your own implementation.
