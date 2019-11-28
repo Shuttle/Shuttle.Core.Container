@@ -351,9 +351,22 @@ namespace Shuttle.Core.Container
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="assemblyName">The assembly name that contains the types to evaluate.</param>
-        public static void RegisterSuffixed(this IComponentRegistry registry, string assemblyName)
+        /// <param name="lifestyle">The `Lifestyle` to register the dependency as.  The default is `Lifestyle.Singleton`.</param>
+        public static void RegisterSuffixed(this IComponentRegistry registry, string assemblyName, Lifestyle lifestyle = Lifestyle.Singleton)
         {
-            RegisterSuffixed(registry, assemblyName, DefaultSuffixes);
+            RegisterSuffixed(registry, assemblyName, DefaultSuffixes, lifestyle);
+        }
+
+        /// <summary>
+        ///     Register all types in the given assembly that end in the `DefaultSuffixes` against a dependency type matching the
+        ///     type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
+        /// </summary>
+        /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
+        /// <param name="assembly">The assembly that contains the types to evaluate.</param>
+        /// <param name="lifestyle">The `Lifestyle` to register the dependency as.  The default is `Lifestyle.Singleton`.</param>
+        public static void RegisterSuffixed(this IComponentRegistry registry, Assembly assembly, Lifestyle lifestyle = Lifestyle.Singleton)
+        {
+            RegisterSuffixed(registry, assembly, DefaultSuffixes, lifestyle);
         }
 
         /// <summary>
@@ -363,22 +376,12 @@ namespace Shuttle.Core.Container
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="assemblyName">The assembly name that contains the types to evaluate.</param>
         /// <param name="suffixes">A list of suffixes that a type should end in to be registered.</param>
-        public static void RegisterSuffixed(this IComponentRegistry registry, string assemblyName, IEnumerable<string> suffixes)
+        /// <param name="lifestyle">The `Lifestyle` to register the dependency as.  The default is `Lifestyle.Singleton`.</param>
+        public static void RegisterSuffixed(this IComponentRegistry registry, string assemblyName, IEnumerable<string> suffixes, Lifestyle lifestyle = Lifestyle.Singleton)
         {
             Guard.AgainstNullOrEmptyString(assemblyName, nameof(assemblyName));
 
-            RegisterSuffixed(registry, Assembly.Load(assemblyName), suffixes);
-        }
-
-        /// <summary>
-        ///     Register all types in the given assembly that end in the `DefaultSuffixes` against a dependency type matching the
-        ///     type name with an `I` prefix, e.g. `CustomerRepository` will be registered against `ICustomerRepository`.
-        /// </summary>
-        /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
-        /// <param name="assembly">The assembly that contains the types to evaluate.</param>
-        public static void RegisterSuffixed(this IComponentRegistry registry, Assembly assembly)
-        {
-            RegisterSuffixed(registry, assembly, DefaultSuffixes);
+            RegisterSuffixed(registry, Assembly.Load(assemblyName), suffixes, lifestyle);
         }
 
         /// <summary>
@@ -388,7 +391,8 @@ namespace Shuttle.Core.Container
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="assembly">The assembly that contains the types to evaluate.</param>
         /// <param name="suffixes">A list of suffixes that a type should end in to be registered.</param>
-        public static void RegisterSuffixed(this IComponentRegistry registry, Assembly assembly, IEnumerable<string> suffixes)
+        /// <param name="lifestyle">The `Lifestyle` to register the dependency as.  The default is `Lifestyle.Singleton`.</param>
+        public static void RegisterSuffixed(this IComponentRegistry registry, Assembly assembly, IEnumerable<string> suffixes, Lifestyle lifestyle = Lifestyle.Singleton)
         {
             Guard.AgainstNull(registry, nameof(registry));
             Guard.AgainstNull(assembly, nameof(assembly));
@@ -411,7 +415,7 @@ namespace Shuttle.Core.Container
 
                     return interfaces.FirstOrDefault(item => item.Name.Equals($"I{type.Name}")) ?? interfaces.First();
                 },
-                type => Lifestyle.Singleton);
+                type => lifestyle);
         }
 
         /// <summary>
@@ -434,6 +438,8 @@ namespace Shuttle.Core.Container
             Guard.AgainstNull(getDependencyType, nameof(getDependencyType));
             Guard.AgainstNull(getLifestyle, nameof(getLifestyle));
 
+            var registrations = new Dictionary<Type, List<Type>>();
+
             foreach (var type in assembly.GetTypes())
             {
                 if (type.IsInterface || type.IsAbstract || !shouldRegister.Invoke(type))
@@ -448,8 +454,67 @@ namespace Shuttle.Core.Container
                     continue;
                 }
 
-                registry.Register(interfaceType, type, getLifestyle.Invoke(type));
+                if (!registrations.ContainsKey(interfaceType))
+                {
+                    registrations.Add(interfaceType, new List<Type>());
+                }
+
+                registrations[interfaceType].Add(type);
             }
+
+            foreach (var registration in registrations)
+            {
+                if (registration.Value.Count == 1)
+                {
+                    registry.Register(registration.Key, registration.Value.First(), getLifestyle.Invoke(registration.Key));
+                }
+                else
+                {
+                    registry.RegisterCollection(registration.Key, registration.Value, getLifestyle.Invoke(registration.Key));
+                }
+            }
+        }
+
+        /// <summary>
+        ///     Register all interfaces in the given assembly that have a single implementation as a regular dependency.
+        ///     All interfaces that have more than 1 implementation are registered as collections.
+        /// </summary>
+        /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
+        /// <param name="assemblyName">The assembly name that contains the types to evaluate.</param>
+        /// <param name="lifestyle">The `Lifestyle` to register the dependency as.  The default is `Lifestyle.Singleton`.</param>
+        public static void RegisterAll(this IComponentRegistry registry, string assemblyName, Lifestyle lifestyle = Lifestyle.Singleton)
+        {
+            RegisterAll(registry, Assembly.Load(assemblyName), lifestyle);
+        }
+
+        /// <summary>
+        ///     Register all interfaces in the given assembly that have a single implementation as a regular dependency.
+        ///     All interfaces that have more than 1 implementation are registered as collections.
+        /// </summary>
+        /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
+        /// <param name="assembly">The assembly that contains the types to evaluate.</param>
+        /// <param name="lifestyle">The `Lifestyle` to register the dependency as.</param>
+        public static void RegisterAll(this IComponentRegistry registry, Assembly assembly, Lifestyle lifestyle = Lifestyle.Singleton)
+        {
+            Guard.AgainstNull(registry, nameof(registry));
+            Guard.AgainstNull(assembly, nameof(assembly));
+
+            Register(
+                registry,
+                assembly,
+                type => type.GetInterfaces().Length > 0,
+                type =>
+                {
+                    var interfaces = type.GetInterfaces();
+
+                    if (interfaces.Length == 0)
+                    {
+                        return null;
+                    }
+
+                    return interfaces.FirstOrDefault(item => item.Name.Equals($"I{type.Name}")) ?? interfaces.First();
+                },
+                type => lifestyle);
         }
     }
 }
