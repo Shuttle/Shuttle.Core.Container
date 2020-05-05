@@ -19,7 +19,7 @@ namespace Shuttle.Core.Container {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -66,6 +66,15 @@ namespace Shuttle.Core.Container {
         public static string AssemblyNameNotFound {
             get {
                 return ResourceManager.GetString("AssemblyNameNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No implementation of &apos;IComponentResolver&apos; has been registered.  The default &apos;ComponentResolver&apos; has been registered.  If you experience issues perhaps check the imlementation of your component container or log an issue..
+        /// </summary>
+        public static string ComponentResolverRegistered {
+            get {
+                return ResourceManager.GetString("ComponentResolverRegistered", resourceCulture);
             }
         }
         

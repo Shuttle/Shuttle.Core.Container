@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Shuttle.Core.Contract;
+using Shuttle.Core.Logging;
 using Shuttle.Core.Reflection;
 
 namespace Shuttle.Core.Container
@@ -342,7 +343,12 @@ namespace Shuttle.Core.Container
                     collection.Lifestyle);
             }
 
-            registry.AttemptRegisterInstance<IComponentResolver>(new ComponentResolver());
+            if (!registry.IsRegistered<IComponentResolver>())
+            {
+                Log.Warning(Resources.ComponentResolverRegistered);
+
+                registry.AttemptRegisterInstance<IComponentResolver>(new ComponentResolver());
+            }
         }
 
         /// <summary>

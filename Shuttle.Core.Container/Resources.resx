@@ -121,6 +121,9 @@
     <value>Could not find an assembly with name '{0}'.</value>
     <comment>{0} = assembly name to locate</comment>
   </data>
+  <data name="ComponentResolverRegistered" xml:space="preserve">
+    <value>No implementation of 'IComponentResolver' has been registered.  The default 'ComponentResolver' has been registered.  If you experience issues perhaps check the imlementation of your component container or log an issue.</value>
+  </data>
   <data name="DefaultConstructorRequired" xml:space="preserve">
     <value>{0} '{1}' has no default constructor.</value>
     <comment>{0} = name of required instance, {1} = full type name</comment>
