@@ -130,7 +130,13 @@ namespace Shuttle.Core.Container
                 resolver.Resolve(component.DependencyType);
             }
 
-            if (resolver is ComponentResolver componentResolver)
+            IComponentResolver registered;
+
+
+            registered = resolver.Resolve<IComponentResolver>();
+
+
+            if (registered is ComponentResolver componentResolver)
             {
                 componentResolver.Assign(resolver);
             }

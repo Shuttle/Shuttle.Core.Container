@@ -136,6 +136,9 @@
     <value>No implementation types has been specified for the collection dependency of type '{0}'..</value>
     <comment>{0} = dependency type full name</comment>
   </data>
+  <data name="IComponentResolverNotRegistered" xml:space="preserve">
+    <value>No `IComponentResolver` instance has been registered.  Any component that is dependent on `IComponentResolver` will fail.</value>
+  </data>
   <data name="MissingTypeException" xml:space="preserve">
     <value>Could not get type '{0}'.  Ensure that you have a fully qualified type: 'FullName, Assembly'.</value>
     <comment>{0} = type that could not be found</comment>

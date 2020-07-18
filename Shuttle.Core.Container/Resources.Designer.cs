@@ -106,6 +106,15 @@ namespace Shuttle.Core.Container {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No `IComponentResolver` instance has been registered.  Any component that is dependent on `IComponentResolver` will fail..
+        /// </summary>
+        public static string IComponentResolverNotRegistered {
+            get {
+                return ResourceManager.GetString("IComponentResolverNotRegistered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not get type &apos;{0}&apos;.  Ensure that you have a fully qualified type: &apos;FullName, Assembly&apos;..
         /// </summary>
         public static string MissingTypeException {
