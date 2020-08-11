@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Shuttle.Core.Contract;
+using Shuttle.Core.Logging;
 using Shuttle.Core.Reflection;
 
 namespace Shuttle.Core.Container
@@ -132,13 +133,18 @@ namespace Shuttle.Core.Container
 
             IComponentResolver registered;
 
-
-            registered = resolver.Resolve<IComponentResolver>();
-
-
-            if (registered is ComponentResolver componentResolver)
+            try
             {
-                componentResolver.Assign(resolver);
+                registered = resolver.Resolve<IComponentResolver>();
+
+                if (registered is ComponentResolver componentResolver)
+                {
+                    componentResolver.Assign(resolver);
+                }
+            }
+            catch
+            {
+                Log.Information(Resources.IComponentResolverNotRegistered);
             }
         }
     }

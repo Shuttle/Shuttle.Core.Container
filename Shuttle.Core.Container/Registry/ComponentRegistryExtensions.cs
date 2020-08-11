@@ -482,7 +482,7 @@ namespace Shuttle.Core.Container
         }
 
         /// <summary>
-        ///     Register all interfaces in the given assembly that have a single implementation as a regular dependency.
+        ///     Register all interfaces that are not yet registered in the given assembly that have a single implementation as a regular dependency.
         ///     All interfaces that have more than 1 implementation are registered as collections.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
@@ -494,7 +494,7 @@ namespace Shuttle.Core.Container
         }
 
         /// <summary>
-        ///     Register all interfaces in the given assembly that have a single implementation as a regular dependency.
+        ///     Register all interfaces that are not yet registered in the given assembly that have a single implementation as a regular dependency.
         ///     All interfaces that have more than 1 implementation are registered as collections.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
@@ -505,21 +505,28 @@ namespace Shuttle.Core.Container
             Guard.AgainstNull(registry, nameof(registry));
             Guard.AgainstNull(assembly, nameof(assembly));
 
+            Type FindDependencyType(Type type)
+            {
+                var interfaces = type.GetInterfaces();
+
+                if (interfaces.Length == 0)
+                {
+                    return null;
+                }
+
+                return interfaces.FirstOrDefault(item => item.Name.Equals($"I{type.Name}")) ?? interfaces.First();
+            }
+
             Register(
                 registry,
                 assembly,
-                type => type.GetInterfaces().Length > 0,
                 type =>
                 {
-                    var interfaces = type.GetInterfaces();
+                    var dependencyType = FindDependencyType(type);
 
-                    if (interfaces.Length == 0)
-                    {
-                        return null;
-                    }
-
-                    return interfaces.FirstOrDefault(item => item.Name.Equals($"I{type.Name}")) ?? interfaces.First();
+                    return dependencyType != null && !registry.IsRegistered(dependencyType);
                 },
+                FindDependencyType,
                 type => lifestyle);
         }
     }
