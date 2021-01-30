@@ -70,7 +70,7 @@ namespace Shuttle.Core.Container {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No implementation of &apos;IComponentResolver&apos; has been registered.  The default &apos;ComponentResolver&apos; has been registered.  If you experience issues perhaps check the imlementation of your component container or log an issue..
+        ///   Looks up a localized string similar to No implementation of &apos;IComponentResolver&apos; has been registered.  The default &apos;ComponentResolver&apos; has been registered.  If you experience issues perhaps check the implementation of your component container or log an issue..
         /// </summary>
         public static string ComponentResolverRegistered {
             get {
