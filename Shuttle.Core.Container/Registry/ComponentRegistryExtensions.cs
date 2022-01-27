@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using Shuttle.Core.Contract;
 using Shuttle.Core.Logging;
-using Shuttle.Core.Reflection;
 
 namespace Shuttle.Core.Container
 {
@@ -59,7 +58,8 @@ namespace Shuttle.Core.Container
         /// <typeparam name="TImplementation">The type of the implementation that should be resolved.</typeparam>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="lifestyle">The lifestyle of the component.</param>
-        public static IComponentRegistry Register<TDependency, TImplementation>(this IComponentRegistry registry, Lifestyle lifestyle)
+        public static IComponentRegistry Register<TDependency, TImplementation>(this IComponentRegistry registry,
+            Lifestyle lifestyle)
             where TDependency : class
             where TImplementation : TDependency
         {
@@ -110,7 +110,8 @@ namespace Shuttle.Core.Container
         /// <typeparam name="TDependency">The type of the dependency being registered.</typeparam>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="instance">The singleton instance to be registered.</param>
-        public static IComponentRegistry RegisterInstance<TDependency>(this IComponentRegistry registry, TDependency instance)
+        public static IComponentRegistry RegisterInstance<TDependency>(this IComponentRegistry registry,
+            TDependency instance)
         {
             Guard.AgainstNull(registry, nameof(registry));
 
@@ -126,7 +127,8 @@ namespace Shuttle.Core.Container
         /// <param name="dependencyType">The type of the dependency being registered.</param>
         /// <param name="implementationType">The type of the implementation that should be resolved.</param>
         /// <returns></returns>
-        public static IComponentRegistry Register(this IComponentRegistry registry, Type dependencyType, Type implementationType)
+        public static IComponentRegistry Register(this IComponentRegistry registry, Type dependencyType,
+            Type implementationType)
         {
             Guard.AgainstNull(registry, nameof(registry));
 
@@ -166,7 +168,8 @@ namespace Shuttle.Core.Container
         /// <typeparam name="TImplementation">The type of the implementation that should be resolved.</typeparam>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="lifestyle">The lifestyle of the component.</param>
-        public static IComponentRegistry AttemptRegister<TDependency, TImplementation>(this IComponentRegistry registry, Lifestyle lifestyle)
+        public static IComponentRegistry AttemptRegister<TDependency, TImplementation>(this IComponentRegistry registry,
+            Lifestyle lifestyle)
             where TDependency : class
             where TImplementation : TDependency
         {
@@ -194,12 +197,9 @@ namespace Shuttle.Core.Container
         public static IComponentRegistry AttemptRegister<TDependencyImplementation>(this IComponentRegistry registry)
             where TDependencyImplementation : class
         {
-            if (registry.IsRegistered<TDependencyImplementation>())
-            {
-                return registry;
-            }
-
-            return registry.Register<TDependencyImplementation>(Lifestyle.Singleton);
+            return registry.IsRegistered<TDependencyImplementation>()
+                ? registry
+                : registry.Register<TDependencyImplementation>(Lifestyle.Singleton);
         }
 
         /// <summary>
@@ -212,7 +212,8 @@ namespace Shuttle.Core.Container
         /// </typeparam>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="lifestyle">The lifestyle of the component.</param>
-        public static IComponentRegistry AttemptRegister<TDependencyImplementation>(this IComponentRegistry registry, Lifestyle lifestyle)
+        public static IComponentRegistry AttemptRegister<TDependencyImplementation>(this IComponentRegistry registry,
+            Lifestyle lifestyle)
             where TDependencyImplementation : class
         {
             Guard.AgainstNull(registry, nameof(registry));
@@ -234,7 +235,8 @@ namespace Shuttle.Core.Container
         /// <typeparam name="TDependency">The type of the dependency being registered.</typeparam>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="instance">The singleton instance to be registered.</param>
-        public static IComponentRegistry AttemptRegisterInstance<TDependency>(this IComponentRegistry registry, TDependency instance)
+        public static IComponentRegistry AttemptRegisterInstance<TDependency>(this IComponentRegistry registry,
+            TDependency instance)
         {
             Guard.AgainstNull(registry, nameof(registry));
 
@@ -249,13 +251,15 @@ namespace Shuttle.Core.Container
         }
 
         /// <summary>
-        ///     Registers an open generic for the given dependency type as a singleton if the dependency has not yet been registered; else
+        ///     Registers an open generic for the given dependency type as a singleton if the dependency has not yet been
+        ///     registered; else
         ///     does nothing.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="dependencyType">The open generic type of the dependency being registered.</param>
         /// <param name="implementationType">The open generic type of the implementation that should be resolved.</param>
-        public static IComponentRegistry AttemptRegisterGeneric(this IComponentRegistry registry, Type dependencyType, Type implementationType)
+        public static IComponentRegistry AttemptRegisterGeneric(this IComponentRegistry registry, Type dependencyType,
+            Type implementationType)
         {
             return AttemptRegisterGeneric(registry, dependencyType, implementationType, Lifestyle.Singleton);
         }
@@ -268,7 +272,8 @@ namespace Shuttle.Core.Container
         /// <param name="dependencyType">The open generic type of the dependency being registered.</param>
         /// <param name="implementationType">The open generic type of the implementation that should be resolved.</param>
         /// <param name="lifestyle">The lifestyle of the component.</param>
-        public static IComponentRegistry AttemptRegisterGeneric(this IComponentRegistry registry, Type dependencyType, Type implementationType, Lifestyle lifestyle)
+        public static IComponentRegistry AttemptRegisterGeneric(this IComponentRegistry registry, Type dependencyType,
+            Type implementationType, Lifestyle lifestyle)
         {
             Guard.AgainstNull(registry, nameof(registry));
 
@@ -282,73 +287,16 @@ namespace Shuttle.Core.Container
             return registry;
         }
 
-        /// <summary>
-        ///     Creates an instance of all types implementing the `IComponentRegistryBootstrap` interface and calls the `Register`
-        ///     method.
-        /// </summary>
-        /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
-        public static void RegistryBootstrap(this IComponentRegistry registry)
+        public static IComponentRegistry AttemptRegisterComponentResolverDelegate(this IComponentRegistry registry)
         {
-            RegistryBootstrap(registry, ComponentRegistrySection.Configuration(), BootstrapSection.Configuration());
-        }
-
-        /// <summary>
-        ///     Creates an instance of all types implementing the `IComponentRegistryBootstrap` interface and calls the `Register`
-        ///     method.
-        /// </summary>
-        /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
-        /// <param name="registryConfiguration">
-        ///     The `IComponentRegistryConfiguration` instance that contains the registry
-        ///     configuration.
-        /// </param>
-        /// <param name="bootstrapConfiguration">
-        ///     The `IBootstrapConfiguration` instance that contains the bootstrapping
-        ///     configuration.
-        /// </param>
-        public static void RegistryBootstrap(this IComponentRegistry registry,
-            IComponentRegistryConfiguration registryConfiguration, IBootstrapConfiguration bootstrapConfiguration)
-        {
-            Guard.AgainstNull(registry, nameof(registry));
-
-            var completed = new HashSet<Type>();
-
-            var reflectionService = new ReflectionService();
-
-            foreach (var assembly in bootstrapConfiguration.Assemblies)
-            {
-                foreach (var type in reflectionService.GetTypesAssignableTo<IComponentRegistryBootstrap>(assembly))
-                {
-                    if (completed.Contains(type))
-                    {
-                        continue;
-                    }
-
-                    type.AssertDefaultConstructor(string.Format(Resources.DefaultConstructorRequired,
-                        "IComponentRegistryBootstrap", type.FullName));
-
-                    ((IComponentRegistryBootstrap) Activator.CreateInstance(type)).Register(registry);
-
-                    completed.Add(type);
-                }
-            }
-
-            foreach (var component in registryConfiguration.Components)
-            {
-                registry.Register(component.DependencyType, component.ImplementationType, component.Lifestyle);
-            }
-
-            foreach (var collection in registryConfiguration.Collections)
-            {
-                registry.RegisterCollection(collection.DependencyType, collection.ImplementationTypes,
-                    collection.Lifestyle);
-            }
-
             if (!registry.IsRegistered<IComponentResolver>())
             {
-                Log.Warning(Resources.ComponentResolverRegistered);
+                Log.Information(Resources.ComponentResolverRegistered);
 
-                registry.AttemptRegisterInstance<IComponentResolver>(new ComponentResolver());
+                registry.AttemptRegisterInstance<IComponentResolver>(new ComponentResolverDelegate());
             }
+
+            return registry;
         }
 
         /// <summary>
@@ -358,7 +306,8 @@ namespace Shuttle.Core.Container
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="assemblyName">The assembly name that contains the types to evaluate.</param>
         /// <param name="lifestyle">The `Lifestyle` to register the dependency as.  The default is `Lifestyle.Singleton`.</param>
-        public static void RegisterSuffixed(this IComponentRegistry registry, string assemblyName, Lifestyle lifestyle = Lifestyle.Singleton)
+        public static void RegisterSuffixed(this IComponentRegistry registry, string assemblyName,
+            Lifestyle lifestyle = Lifestyle.Singleton)
         {
             RegisterSuffixed(registry, assemblyName, DefaultSuffixes, lifestyle);
         }
@@ -370,7 +319,8 @@ namespace Shuttle.Core.Container
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="assembly">The assembly that contains the types to evaluate.</param>
         /// <param name="lifestyle">The `Lifestyle` to register the dependency as.  The default is `Lifestyle.Singleton`.</param>
-        public static void RegisterSuffixed(this IComponentRegistry registry, Assembly assembly, Lifestyle lifestyle = Lifestyle.Singleton)
+        public static void RegisterSuffixed(this IComponentRegistry registry, Assembly assembly,
+            Lifestyle lifestyle = Lifestyle.Singleton)
         {
             RegisterSuffixed(registry, assembly, DefaultSuffixes, lifestyle);
         }
@@ -383,7 +333,8 @@ namespace Shuttle.Core.Container
         /// <param name="assemblyName">The assembly name that contains the types to evaluate.</param>
         /// <param name="suffixes">A list of suffixes that a type should end in to be registered.</param>
         /// <param name="lifestyle">The `Lifestyle` to register the dependency as.  The default is `Lifestyle.Singleton`.</param>
-        public static void RegisterSuffixed(this IComponentRegistry registry, string assemblyName, IEnumerable<string> suffixes, Lifestyle lifestyle = Lifestyle.Singleton)
+        public static void RegisterSuffixed(this IComponentRegistry registry, string assemblyName,
+            IEnumerable<string> suffixes, Lifestyle lifestyle = Lifestyle.Singleton)
         {
             Guard.AgainstNullOrEmptyString(assemblyName, nameof(assemblyName));
 
@@ -398,7 +349,8 @@ namespace Shuttle.Core.Container
         /// <param name="assembly">The assembly that contains the types to evaluate.</param>
         /// <param name="suffixes">A list of suffixes that a type should end in to be registered.</param>
         /// <param name="lifestyle">The `Lifestyle` to register the dependency as.  The default is `Lifestyle.Singleton`.</param>
-        public static void RegisterSuffixed(this IComponentRegistry registry, Assembly assembly, IEnumerable<string> suffixes, Lifestyle lifestyle = Lifestyle.Singleton)
+        public static void RegisterSuffixed(this IComponentRegistry registry, Assembly assembly,
+            IEnumerable<string> suffixes, Lifestyle lifestyle = Lifestyle.Singleton)
         {
             Guard.AgainstNull(registry, nameof(registry));
             Guard.AgainstNull(assembly, nameof(assembly));
@@ -425,7 +377,8 @@ namespace Shuttle.Core.Container
         }
 
         /// <summary>
-        ///     Registers all the types in the given assembly that satisfies the `shouldRegister` function against the type returned
+        ///     Registers all the types in the given assembly that satisfies the `shouldRegister` function against the type
+        ///     returned
         ///     from the `getDependencyType` function.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
@@ -436,7 +389,8 @@ namespace Shuttle.Core.Container
         ///     registered against; else `null` to ignore the register for no qualifying dependency type.
         /// </param>
         /// <param name="getLifestyle">A function that returns the `Lifestyle` with which to register the component.</param>
-        public static void Register(this IComponentRegistry registry, Assembly assembly, Func<Type, bool> shouldRegister, Func<Type, Type> getDependencyType, Func<Type, Lifestyle> getLifestyle)
+        public static void Register(this IComponentRegistry registry, Assembly assembly,
+            Func<Type, bool> shouldRegister, Func<Type, Type> getDependencyType, Func<Type, Lifestyle> getLifestyle)
         {
             Guard.AgainstNull(registry, nameof(registry));
             Guard.AgainstNull(assembly, nameof(assembly));
@@ -472,35 +426,41 @@ namespace Shuttle.Core.Container
             {
                 if (registration.Value.Count == 1)
                 {
-                    registry.Register(registration.Key, registration.Value.First(), getLifestyle.Invoke(registration.Key));
+                    registry.Register(registration.Key, registration.Value.First(),
+                        getLifestyle.Invoke(registration.Key));
                 }
                 else
                 {
-                    registry.RegisterCollection(registration.Key, registration.Value, getLifestyle.Invoke(registration.Key));
+                    registry.RegisterCollection(registration.Key, registration.Value,
+                        getLifestyle.Invoke(registration.Key));
                 }
             }
         }
 
         /// <summary>
-        ///     Register all interfaces that are not yet registered in the given assembly that have a single implementation as a regular dependency.
+        ///     Register all interfaces that are not yet registered in the given assembly that have a single implementation as a
+        ///     regular dependency.
         ///     All interfaces that have more than 1 implementation are registered as collections.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="assemblyName">The assembly name that contains the types to evaluate.</param>
         /// <param name="lifestyle">The `Lifestyle` to register the dependency as.  The default is `Lifestyle.Singleton`.</param>
-        public static void RegisterAll(this IComponentRegistry registry, string assemblyName, Lifestyle lifestyle = Lifestyle.Singleton)
+        public static void RegisterAll(this IComponentRegistry registry, string assemblyName,
+            Lifestyle lifestyle = Lifestyle.Singleton)
         {
             RegisterAll(registry, Assembly.Load(assemblyName), lifestyle);
         }
 
         /// <summary>
-        ///     Register all interfaces that are not yet registered in the given assembly that have a single implementation as a regular dependency.
+        ///     Register all interfaces that are not yet registered in the given assembly that have a single implementation as a
+        ///     regular dependency.
         ///     All interfaces that have more than 1 implementation are registered as collections.
         /// </summary>
         /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
         /// <param name="assembly">The assembly that contains the types to evaluate.</param>
         /// <param name="lifestyle">The `Lifestyle` to register the dependency as.</param>
-        public static void RegisterAll(this IComponentRegistry registry, Assembly assembly, Lifestyle lifestyle = Lifestyle.Singleton)
+        public static void RegisterAll(this IComponentRegistry registry, Assembly assembly,
+            Lifestyle lifestyle = Lifestyle.Singleton)
         {
             Guard.AgainstNull(registry, nameof(registry));
             Guard.AgainstNull(assembly, nameof(assembly));

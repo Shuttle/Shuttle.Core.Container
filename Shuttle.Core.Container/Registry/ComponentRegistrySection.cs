@@ -14,7 +14,7 @@ namespace Shuttle.Core.Container
         [ConfigurationProperty("components", IsRequired = false, DefaultValue = null)]
         public ComponentRegistryComponentsElement Components => (ComponentRegistryComponentsElement) this["components"];
 
-        public static IComponentRegistryConfiguration Configuration()
+        public static IComponentRegistryConfiguration GetConfiguration()
         {
             var result = new ComponentRegistryConfiguration();
 

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Shuttle.Core.Contract;
-using Shuttle.Core.Logging;
-using Shuttle.Core.Reflection;
 
 namespace Shuttle.Core.Container
 {
@@ -90,62 +88,29 @@ namespace Shuttle.Core.Container
             return resolver.ResolveAll(typeof(T)).Cast<T>().ToList();
         }
 
-
-        /// <summary>
-        ///     Creates an instance of all types implementing the `IComponentResolverBootstrap` interface and calls the `Resolve`
-        ///     method.
-        /// </summary>
-        /// <param name="resolver">The `IComponentResolver` instance to resolve dependencies from.</param>
-        public static void ResolverBootstrap(this IComponentResolver resolver)
+        public static IComponentResolver WireComponentResolverDelegate(this IComponentResolver resolver)
         {
-            ResolverBootstrap(resolver, ComponentResolverSection.Configuration(), BootstrapSection.Configuration());
-        }
-
-        /// <summary>
-        ///     Creates an instance of all types implementing the `IComponentResolverBootstrap` interface and calls the `Resolve`
-        ///     method.
-        /// </summary>
-        /// <param name="resolver">The `IComponentResolver` instance to resolve dependencies from.</param>
-        /// <param name="resolverConfiguration">The `IComponentResolverConfiguration` instance that contains the registry configuration.</param>
-        /// <param name="bootstrapConfiguration">The `IBootstrapConfiguration` instance that contains the bootstrapping configuration.</param>
-        public static void ResolverBootstrap(IComponentResolver resolver, IComponentResolverConfiguration resolverConfiguration, IBootstrapConfiguration bootstrapConfiguration)
-        {
-            Guard.AgainstNull(resolver, nameof(resolver));
-            Guard.AgainstNull(resolverConfiguration, nameof(resolverConfiguration));
-
-            var reflectionService = new ReflectionService();
-
-            foreach (var assembly in bootstrapConfiguration.Assemblies)
-            {
-                foreach (var type in reflectionService.GetTypesAssignableTo<IComponentResolverBootstrap>(assembly))
-                {
-                    type.AssertDefaultConstructor(string.Format(Resources.DefaultConstructorRequired,
-                        "IComponentResolverBootstrap", type.FullName));
-
-                    ((IComponentResolverBootstrap)Activator.CreateInstance(type)).Resolve(resolver);
-                }
-            }
-
-            foreach (var component in resolverConfiguration.Components)
-            {
-                resolver.Resolve(component.DependencyType);
-            }
-
             IComponentResolver registered;
 
             try
             {
                 registered = resolver.Resolve<IComponentResolver>();
-
-                if (registered is ComponentResolver componentResolver)
-                {
-                    componentResolver.Assign(resolver);
-                }
             }
             catch
             {
-                Log.Information(Resources.IComponentResolverNotRegistered);
+                throw new Exception(Resources.IComponentResolverNotRegisteredException);
             }
+
+            if (registered is ComponentResolverDelegate componentResolver)
+            {
+                componentResolver.Assign(resolver);
+            }
+            else
+            {
+                throw new Exception(Resources.IComponentResolverNotCorrectlyTypedException);
+            }
+
+            return resolver;
         }
     }
 }

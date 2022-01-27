@@ -61,11 +61,11 @@ namespace Shuttle.Core.Container {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not find an assembly with name &apos;{0}&apos;..
+        ///   Looks up a localized string similar to No `IComponentResolver` implementation has been assigned to the `ComponentResolverProxy`.  Please call `ComponentResolverExtensions.AssignComponentResolver()`, or call `.AssignComponentResolver()` on the `IComponentResolver` implementation..
         /// </summary>
-        public static string AssemblyNameNotFound {
+        public static string ComponentResolverProxyException {
             get {
-                return ResourceManager.GetString("AssemblyNameNotFound", resourceCulture);
+                return ResourceManager.GetString("ComponentResolverProxyException", resourceCulture);
             }
         }
         
@@ -106,11 +106,20 @@ namespace Shuttle.Core.Container {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No `IComponentResolver` instance has been registered.  Any component that is dependent on `IComponentResolver` will fail..
+        ///   Looks up a localized string similar to The `IComponentResolver` registered using the `IComponentRegistry.RegisterComponentResolver` method has to be inherited from `ComponentResolverProxy`.  If you have a requirement to use your own implementation please inherit your resolver implementation from `ComponentResolverProxy`..
         /// </summary>
-        public static string IComponentResolverNotRegistered {
+        public static string IComponentResolverNotCorrectlyTypedException {
             get {
-                return ResourceManager.GetString("IComponentResolverNotRegistered", resourceCulture);
+                return ResourceManager.GetString("IComponentResolverNotCorrectlyTypedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No `IComponentResolver` instance has been registered.  This is required to assign the component resolver.  The `IComponentRegistry.RegisterComponentResolver` method registers a proxy to the `IComponentResolver` implementation and this method assigns the implementation to the proxy..
+        /// </summary>
+        public static string IComponentResolverNotRegisteredException {
+            get {
+                return ResourceManager.GetString("IComponentResolverNotRegisteredException", resourceCulture);
             }
         }
         

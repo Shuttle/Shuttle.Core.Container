@@ -117,9 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AssemblyNameNotFound" xml:space="preserve">
-    <value>Could not find an assembly with name '{0}'.</value>
-    <comment>{0} = assembly name to locate</comment>
+  <data name="ComponentResolverProxyException" xml:space="preserve">
+    <value>No `IComponentResolver` implementation has been assigned to the `ComponentResolverProxy`.  Please call `ComponentResolverExtensions.AssignComponentResolver()`, or call `.AssignComponentResolver()` on the `IComponentResolver` implementation.</value>
   </data>
   <data name="ComponentResolverRegistered" xml:space="preserve">
     <value>No implementation of 'IComponentResolver' has been registered.  The default 'ComponentResolver' has been registered.  If you experience issues perhaps check the implementation of your component container or log an issue.</value>
@@ -136,8 +135,11 @@
     <value>No implementation types has been specified for the collection dependency of type '{0}'..</value>
     <comment>{0} = dependency type full name</comment>
   </data>
-  <data name="IComponentResolverNotRegistered" xml:space="preserve">
-    <value>No `IComponentResolver` instance has been registered.  Any component that is dependent on `IComponentResolver` will fail.</value>
+  <data name="IComponentResolverNotCorrectlyTypedException" xml:space="preserve">
+    <value>The `IComponentResolver` registered using the `IComponentRegistry.RegisterComponentResolver` method has to be inherited from `ComponentResolverProxy`.  If you have a requirement to use your own implementation please inherit your resolver implementation from `ComponentResolverProxy`.</value>
+  </data>
+  <data name="IComponentResolverNotRegisteredException" xml:space="preserve">
+    <value>No `IComponentResolver` instance has been registered.  This is required to assign the component resolver.  The `IComponentRegistry.RegisterComponentResolver` method registers a proxy to the `IComponentResolver` implementation and this method assigns the implementation to the proxy.</value>
   </data>
   <data name="MissingTypeException" xml:space="preserve">
     <value>Could not get type '{0}'.  Ensure that you have a fully qualified type: 'FullName, Assembly'.</value>

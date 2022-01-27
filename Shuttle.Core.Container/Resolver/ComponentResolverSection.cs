@@ -9,7 +9,7 @@ namespace Shuttle.Core.Container
         [ConfigurationProperty("components", IsRequired = false, DefaultValue = null)]
         public ComponentResolverCollectionElement Components => (ComponentResolverCollectionElement) this["components"];
 
-        public static IComponentResolverConfiguration Configuration()
+        public static IComponentResolverConfiguration GetConfiguration()
         {
             var result = new ComponentResolverConfiguration();
             var section = ConfigurationSectionProvider.Open<ComponentResolverSection>("shuttle", "componentResolver");
