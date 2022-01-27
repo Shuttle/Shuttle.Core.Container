@@ -112,5 +112,32 @@ namespace Shuttle.Core.Container
 
             return resolver;
         }
+
+        /// <summary>
+        ///     Resolves all dependencies specified in the application configuration file `componentResolver` section.
+        /// </summary>
+        /// <param name="resolver">The `IComponentResolver` instance to resolve dependencies from.</param>
+        public static void ResolveConfiguration(this IComponentResolver resolver)
+        {
+            ResolveConfiguration(resolver, ComponentResolverSection.GetConfiguration());
+        }
+
+        /// <summary>
+        ///     Resolves all dependencies specified in the given `IComponentResolverConfiguration` instance.
+        /// </summary>
+        /// <param name="resolver">The `IComponentResolver` instance to resolve dependencies from.</param>
+        /// <param name="resolverConfiguration">The `IComponentResolverConfiguration` instance that contains the registry configuration.</param>
+        public static void ResolveConfiguration(IComponentResolver resolver, IComponentResolverConfiguration resolverConfiguration)
+        {
+            Guard.AgainstNull(resolver, nameof(resolver));
+            Guard.AgainstNull(resolverConfiguration, nameof(resolverConfiguration));
+
+            foreach (var component in resolverConfiguration.Components)
+            {
+                resolver.Resolve(component.DependencyType);
+            }
+
+            resolver.WireComponentResolverDelegate();
+        }
     }
 }

@@ -31,7 +31,7 @@ namespace Shuttle.Core.Container
 
                 if (dependencyType == null)
                 {
-                    throw new ConfigurationErrorsException(string.Format(Resources.MissingTypeException, component.DependencyType));
+                    throw new ConfigurationErrorsException(string.Format(Container.Resources.MissingTypeException, component.DependencyType));
                 }
 
                 var implementationType = string.IsNullOrEmpty(component.ImplementationType)
@@ -40,7 +40,7 @@ namespace Shuttle.Core.Container
 
                 if (implementationType == null)
                 {
-                    throw new ConfigurationErrorsException(string.Format(Resources.MissingTypeException, component.ImplementationType));
+                    throw new ConfigurationErrorsException(string.Format(Container.Resources.MissingTypeException, component.ImplementationType));
                 }
 
                 result.AddComponent(
@@ -53,7 +53,7 @@ namespace Shuttle.Core.Container
 
                 if (dependencyType == null)
                 {
-                    throw new ConfigurationErrorsException(string.Format(Resources.MissingTypeException,
+                    throw new ConfigurationErrorsException(string.Format(Container.Resources.MissingTypeException,
                         collection.DependencyType));
                 }
 
@@ -66,7 +66,7 @@ namespace Shuttle.Core.Container
                     if (implementationType == null)
                     {
                         throw new ConfigurationErrorsException(string.Format(
-                            Resources.MissingTypeException, element.ImplementationType));
+                            Container.Resources.MissingTypeException, element.ImplementationType));
                     }
 
                     implementationTypes.Add(implementationType);

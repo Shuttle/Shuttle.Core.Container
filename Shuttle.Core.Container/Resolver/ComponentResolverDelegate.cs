@@ -33,7 +33,7 @@ namespace Shuttle.Core.Container
         {
             if (_resolver == null)
             {
-                throw new TypeResolutionException(Resources.ComponentResolverProxyException);
+                throw new TypeResolutionException(Resources.ComponentResolverDelegateException);
             }
 
             return _resolver;

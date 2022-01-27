@@ -489,5 +489,38 @@ namespace Shuttle.Core.Container
                 FindDependencyType,
                 type => lifestyle);
         }
+
+        /// <summary>
+        ///     Attempts to register all components specified in the application configuration file `componentRegistry` section.
+        /// </summary>
+        /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
+        public static void AttemptRegisterConfiguration(this IComponentRegistry registry)
+        {
+            AttemptRegisterConfiguration(registry, ComponentRegistrySection.GetConfiguration());
+        }
+
+        /// <summary>
+        ///     Attempts to register all components specified in the given `IComponentRegistryConfiguration` instance.
+        /// </summary>
+        /// <param name="registry">The `IComponentRegistry` instance to register the mapping against.</param>
+        /// <param name="registryConfiguration">
+        ///     The `IComponentRegistryConfiguration` instance that contains the registry
+        ///     configuration.
+        /// </param>
+        public static void AttemptRegisterConfiguration(this IComponentRegistry registry, IComponentRegistryConfiguration registryConfiguration)
+        {
+            Guard.AgainstNull(registry, nameof(registry));
+
+            foreach (var component in registryConfiguration.Components)
+            {
+                registry.Register(component.DependencyType, component.ImplementationType, component.Lifestyle);
+            }
+
+            foreach (var collection in registryConfiguration.Collections)
+            {
+                registry.RegisterCollection(collection.DependencyType, collection.ImplementationTypes,
+                    collection.Lifestyle);
+            }
+        }
     }
 }

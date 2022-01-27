@@ -61,11 +61,11 @@ namespace Shuttle.Core.Container {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No `IComponentResolver` implementation has been assigned to the `ComponentResolverProxy`.  Please call `ComponentResolverExtensions.AssignComponentResolver()`, or call `.AssignComponentResolver()` on the `IComponentResolver` implementation..
+        ///   Looks up a localized string similar to No `IComponentResolver` implementation has been assigned to the `ComponentResolverDelegate`.  Please call `ComponentResolverExtensions.WireComponentResolverDelegate()`, or call `.WireComponentResolverDelegate()` on the `IComponentResolver` implementation..
         /// </summary>
-        public static string ComponentResolverProxyException {
+        public static string ComponentResolverDelegateException {
             get {
-                return ResourceManager.GetString("ComponentResolverProxyException", resourceCulture);
+                return ResourceManager.GetString("ComponentResolverDelegateException", resourceCulture);
             }
         }
         
@@ -106,7 +106,7 @@ namespace Shuttle.Core.Container {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The `IComponentResolver` registered using the `IComponentRegistry.RegisterComponentResolver` method has to be inherited from `ComponentResolverProxy`.  If you have a requirement to use your own implementation please inherit your resolver implementation from `ComponentResolverProxy`..
+        ///   Looks up a localized string similar to The `IComponentResolver` registered has to inherit from `ComponentResolverDelegate`.  If you have a requirement to use your own implementation please inherit your resolver implementation from `ComponentResolverDelegate`..
         /// </summary>
         public static string IComponentResolverNotCorrectlyTypedException {
             get {
@@ -115,7 +115,7 @@ namespace Shuttle.Core.Container {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No `IComponentResolver` instance has been registered.  This is required to assign the component resolver.  The `IComponentRegistry.RegisterComponentResolver` method registers a proxy to the `IComponentResolver` implementation and this method assigns the implementation to the proxy..
+        ///   Looks up a localized string similar to No `IComponentResolver` instance has been registered.  This is required to assign the component resolver.  The `IComponentRegistry.AttemptRegisterComponentResolverDelegate()` method registers a delegate to the `IComponentResolver` implementation and this method assigns the implementation to the delegate..
         /// </summary>
         public static string IComponentResolverNotRegisteredException {
             get {

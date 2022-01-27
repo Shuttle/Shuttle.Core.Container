@@ -26,7 +26,7 @@ namespace Shuttle.Core.Container
                 if (dependencyType == null)
                 {
                     throw new ConfigurationErrorsException(
-                        string.Format(Resources.MissingTypeException, component.DependencyType));
+                        string.Format(Container.Resources.MissingTypeException, component.DependencyType));
                 }
 
                 result.AddComponent(new ComponentResolverConfiguration.Component(dependencyType));

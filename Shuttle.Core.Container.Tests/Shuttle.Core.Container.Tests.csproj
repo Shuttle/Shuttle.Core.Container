@@ -16,12 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="files\Bootstrap-Grouped.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="files\Bootstrap.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="files\ComponentRegistry-Grouped.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
