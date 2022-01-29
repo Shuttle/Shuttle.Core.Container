@@ -90,24 +90,18 @@ namespace Shuttle.Core.Container
 
         public static IComponentResolver WireComponentResolverDelegate(this IComponentResolver resolver)
         {
-            IComponentResolver registered;
-
             try
             {
-                registered = resolver.Resolve<IComponentResolver>();
+                var registered = resolver.Resolve<IComponentResolver>();
+
+                if (registered is ComponentResolverDelegate componentResolver)
+                {
+                    componentResolver.Assign(resolver);
+                }
             }
             catch
             {
-                throw new Exception(Resources.IComponentResolverNotRegisteredException);
-            }
-
-            if (registered is ComponentResolverDelegate componentResolver)
-            {
-                componentResolver.Assign(resolver);
-            }
-            else
-            {
-                throw new Exception(Resources.IComponentResolverNotCorrectlyTypedException);
+                // ignore - assume container implementation registered itself
             }
 
             return resolver;

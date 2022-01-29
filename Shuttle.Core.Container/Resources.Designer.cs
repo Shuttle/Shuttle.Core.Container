@@ -70,11 +70,11 @@ namespace Shuttle.Core.Container {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No implementation of &apos;IComponentResolver&apos; has been registered.  The default &apos;ComponentResolver&apos; has been registered.  If you experience issues perhaps check the implementation of your component container or log an issue..
+        ///   Looks up a localized string similar to No implementation of &apos;IComponentResolver&apos; has been registered.  The default &apos;ComponentResolverDelegate&apos; has been registered.  If you experience issues perhaps check the implementation of your component container or log an issue..
         /// </summary>
-        public static string ComponentResolverRegistered {
+        public static string ComponentResolverDelegateRegistered {
             get {
-                return ResourceManager.GetString("ComponentResolverRegistered", resourceCulture);
+                return ResourceManager.GetString("ComponentResolverDelegateRegistered", resourceCulture);
             }
         }
         
@@ -102,24 +102,6 @@ namespace Shuttle.Core.Container {
         public static string EmptyCollectionImplementationTypes {
             get {
                 return ResourceManager.GetString("EmptyCollectionImplementationTypes", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The `IComponentResolver` registered has to inherit from `ComponentResolverDelegate`.  If you have a requirement to use your own implementation please inherit your resolver implementation from `ComponentResolverDelegate`..
-        /// </summary>
-        public static string IComponentResolverNotCorrectlyTypedException {
-            get {
-                return ResourceManager.GetString("IComponentResolverNotCorrectlyTypedException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No `IComponentResolver` instance has been registered.  This is required to assign the component resolver.  The `IComponentRegistry.AttemptRegisterComponentResolverDelegate()` method registers a delegate to the `IComponentResolver` implementation and this method assigns the implementation to the delegate..
-        /// </summary>
-        public static string IComponentResolverNotRegisteredException {
-            get {
-                return ResourceManager.GetString("IComponentResolverNotRegisteredException", resourceCulture);
             }
         }
         

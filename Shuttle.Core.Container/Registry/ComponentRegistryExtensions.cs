@@ -291,7 +291,7 @@ namespace Shuttle.Core.Container
         {
             if (!registry.IsRegistered<IComponentResolver>())
             {
-                Log.Information(Resources.ComponentResolverRegistered);
+                Log.Information(Resources.ComponentResolverDelegateRegistered);
 
                 registry.AttemptRegisterInstance<IComponentResolver>(new ComponentResolverDelegate());
             }

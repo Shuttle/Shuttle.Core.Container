@@ -120,8 +120,8 @@
   <data name="ComponentResolverDelegateException" xml:space="preserve">
     <value>No `IComponentResolver` implementation has been assigned to the `ComponentResolverDelegate`.  Please call `ComponentResolverExtensions.WireComponentResolverDelegate()`, or call `.WireComponentResolverDelegate()` on the `IComponentResolver` implementation.</value>
   </data>
-  <data name="ComponentResolverRegistered" xml:space="preserve">
-    <value>No implementation of 'IComponentResolver' has been registered.  The default 'ComponentResolver' has been registered.  If you experience issues perhaps check the implementation of your component container or log an issue.</value>
+  <data name="ComponentResolverDelegateRegistered" xml:space="preserve">
+    <value>No implementation of 'IComponentResolver' has been registered.  The default 'ComponentResolverDelegate' has been registered.  If you experience issues perhaps check the implementation of your component container or log an issue.</value>
   </data>
   <data name="DefaultConstructorRequired" xml:space="preserve">
     <value>{0} '{1}' has no default constructor.</value>
@@ -134,12 +134,6 @@
   <data name="EmptyCollectionImplementationTypes" xml:space="preserve">
     <value>No implementation types has been specified for the collection dependency of type '{0}'..</value>
     <comment>{0} = dependency type full name</comment>
-  </data>
-  <data name="IComponentResolverNotCorrectlyTypedException" xml:space="preserve">
-    <value>The `IComponentResolver` registered has to inherit from `ComponentResolverDelegate`.  If you have a requirement to use your own implementation please inherit your resolver implementation from `ComponentResolverDelegate`.</value>
-  </data>
-  <data name="IComponentResolverNotRegisteredException" xml:space="preserve">
-    <value>No `IComponentResolver` instance has been registered.  This is required to assign the component resolver.  The `IComponentRegistry.AttemptRegisterComponentResolverDelegate()` method registers a delegate to the `IComponentResolver` implementation and this method assigns the implementation to the delegate.</value>
   </data>
   <data name="MissingTypeException" xml:space="preserve">
     <value>Could not get type '{0}'.  Ensure that you have a fully qualified type: 'FullName, Assembly'.</value>
