@@ -130,8 +130,6 @@ namespace Shuttle.Core.Container
             {
                 resolver.Resolve(component.DependencyType);
             }
-
-            resolver.WireComponentResolverDelegate();
         }
     }
 }
